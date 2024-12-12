@@ -1,4 +1,11 @@
-home page
-<input [(ngModel)]="nomeAccesso" placeholder="inserisci il tuo nome utente"/>
-<input [(ngModel)]="passwordAccesso" placeholder="inserisci la tua password"/>
-<button (click)="accedi()">accedi</button>
+pagina x registrati 
+{{errore}}
+<input name="nome" [(ngModel)]="nomeAccesso" placeholder="inserisci il tuo nome utente"/>
+<input name="password" [(ngModel)]="passwordAccesso" placeholder="inserisci la tua password"/>
+<form action="login">
+    <button>accedi</button>
+</form>
+
+<form action="/registrazione" method="post">
+    <button> registrati</button>
+</form>
