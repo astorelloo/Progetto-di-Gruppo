@@ -1,7 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request
 from flask_login import LoginManager, login_user, logout_user, login_required,current_user
-from models import db, User
-
+from models import db, User, ListaCarte
 app = Flask(__name__)
 app.secret_key = 'key_sessione_user' #chiave per la sessione user
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
@@ -57,6 +56,16 @@ def logout():
     logout_user() #logout user
     return redirect(url_for('login')) #torniamo al login
 
+@app.route('/api/carte', methods=['GET'])
+def get_carte():
+    carte = ListaCarte.query.all()
+    return {
+        "carte": [
+            {"id": carta.id, "nome": carta.nome, "descrizione": carta.descrizione, "prezzo": carta.prezzo}
+            for carta in carte
+        ]
+    }
+    
 #implementazione route e metodi#
 if __name__ == '__main__':
     app.run(debug=True)
