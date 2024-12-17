@@ -1,5 +1,12 @@
-<input name="nome" [(ngModel)]="nomeAccesso" placeholder="inserisci il tuo nome utente"/>
-<input name="password" [(ngModel)]="passwordAccesso" placeholder="inserisci la tua password"/>
-<form action="/registrazione" method="post">
-    <button> registrati</button>
+<h2>Registrazione</h2>
+{% if error %}
+    <p style="color: red;">{{ error }}</p>
+{% endif %}
+<form method="POST">
+    <label>Username:</label><br>
+    <input type="text" name="username" required><br>
+    <label>Password:</label><br>
+    <input type="password" name="password" required><br>
+    <button type="submit">Registrati</button>
 </form>
+<a href="{{ url_for('login') }}">Hai già un account? Accedi qui.</a>
