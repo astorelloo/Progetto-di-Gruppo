@@ -65,7 +65,35 @@ def get_carte():
             for carta in carte
         ]
     }
+
+API_URL = "https://db.ygoprodeck.com/api/v7/cardinfo.php"
+
+def fetch_and_populate():
+    response = requests.get(API_URL)
+    if response.status_code == 200:
+        data = response.json()
+        carte = data.get("data", [])[:100]  # Prendi le prime 100 carte
+        with app.app_context():
+           for carta in carte:
+                nome = carta.get("name", "Sconosciuto")
+                descrizione = carta.get("desc", "Nessuna descrizione")
+                prezzo = carta.get("card_prices", [{}])[0].get("amazon_price", 0.0)
+                foto = carta.get("card_images", [{}])[0].get("image_url", None)
+               
+                nuova_carta = ListaCarte(
+                    nome=nome,
+                    descrizione=descrizione,
+                    prezzo=float(prezzo) if prezzo else 0.0,
+                    foto=foto
+                )
+                #crea user e lo salva nel db
+                new_carta = carta(nome =nome, descrizione=descrizione, prezzo = prezzo, foto = foto)
+                db.session.add(new_carta)
+                db.session.commit()
+                print("Database popolato con successo!")
     
-#implementazione route e metodi#
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     app.run(debug=True)
+    #fetch_and_populate()
+    

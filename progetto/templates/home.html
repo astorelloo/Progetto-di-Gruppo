@@ -1,4 +1,21 @@
-sei dentro
-<div>
-    <a></a>
-</div>
+{% if carta|length > 0 %}
+<ul class="list-group">
+    <!-- Iterazione su ogni elemento della lista -->
+    {% for elemento in carta %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+            <h2>{{ elemento.nome }}</h2>
+            <p>{{ elemento.descrizione }}</p>
+            <p>Prezzo: €{{ elemento.prezzo }}</p>
+        </div>
+        {% if elemento.foto %}
+        <div>
+            <img src="{{ elemento.foto }}" alt="{{ elemento.nome }}" style="max-width: 100px; max-height: 100px;">
+        </div>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p><b>Non ci sono carte!</b></p>
+{% endif %}

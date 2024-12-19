@@ -10,11 +10,12 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(80), nullable=False)
 
 # Modello per le carte
-class ListaCarte(db.Model):
+class Carta(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100), nullable=False) 
     descrizione = db.Column(db.String(100), nullable=False)
     prezzo = db.Column(db.Float, nullable=False)
+    foto = db.Column(db.String(200), nullable=True)
 
 # Tabella di associazione per il rapporto molti-a-molti
 deck_carte = db.Table('deck_carte',
