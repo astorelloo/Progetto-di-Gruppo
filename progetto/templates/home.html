@@ -1,3 +1,17 @@
+<header>
+    <form action="/logout">
+        <button>logout</button>
+    </form>
+    <form action="/deck">
+
+    </form>
+    <form action="/carrello">
+
+    </form>
+</header>
+
+
+
 {% if carta|length > 0 %}
 <ul class="list-group">
     <!-- Iterazione su ogni elemento della lista -->
@@ -13,6 +27,8 @@
             <img src="{{ elemento.foto }}" alt="{{ elemento.nome }}" style="max-width: 100px; max-height: 100px;">
         </div>
         {% endif %}
+        <!--DA FARE!!!!!!-->
+        <button>aggiungi al carrello</button>
     </li>
     {% endfor %}
 </ul>

@@ -58,6 +58,12 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
+@app.route('/deck')
+@login_required
+def deck():
+    return render_template('deck.html', carta=carte, username=current_user.username, error=None)
+
+
 @app.route('/api/carte', methods=['GET'])
 def get_carte():
     carte = Carta.query.all()
@@ -67,6 +73,7 @@ def get_carte():
             for carta in carte
         ]
     }
+
 #svuota il db carte e ne mette 1000
 API_URL = "https://db.ygoprodeck.com/api/v7/cardinfo.php"
 def fetch_and_populate():
@@ -98,7 +105,7 @@ def clear_carte():
         print(f"Tabella Carte svuotata. {num_rows_deleted} record eliminati.")
 
 if __name__ == "__main__":
-    #with app.app_context():
-    #    clear_carte()  # Svuota la tabella delle carte
-    #    fetch_and_populate()  # Popola la tabella con nuove carte
+    with app.app_context():
+        clear_carte()  # Svuota la tabella delle carte
+        fetch_and_populate()  # Popola la tabella con nuove carte
     app.run(debug=True)
