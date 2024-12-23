@@ -50,7 +50,7 @@ def home():
     carte = Carta.query.all()
     for carta in carte:
         print(carta.nome, carta.foto)  # Debug: stampa il nome e la foto di ogni carta
-    return render_template('home.html', carta=carte, username=current_user.username)
+    return render_template('home.html',carta = carte, username=current_user.username)
 
 @app.route('/logout')
 @login_required
@@ -61,8 +61,12 @@ def logout():
 @app.route('/deck')
 @login_required
 def deck():
-    return render_template('deck.html', carta=carte, username=current_user.username, error=None)
+    return render_template('deck.html', username=current_user.username, error=None)
 
+@app.route('/carrello')
+@login_required
+def carrello():
+    return render_template('carrello.html', username=current_user.username, error=None)
 
 @app.route('/api/carte', methods=['GET'])
 def get_carte():
@@ -105,7 +109,7 @@ def clear_carte():
         print(f"Tabella Carte svuotata. {num_rows_deleted} record eliminati.")
 
 if __name__ == "__main__":
-    with app.app_context():
-        clear_carte()  # Svuota la tabella delle carte
-        fetch_and_populate()  # Popola la tabella con nuove carte
+    #with app.app_context():
+    #    clear_carte()  # Svuota la tabella delle carte
+    #    fetch_and_populate()  # Popola la tabella con nuove carte
     app.run(debug=True)

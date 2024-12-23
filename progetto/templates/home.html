@@ -1,12 +1,13 @@
+
 <header>
     <form action="/logout">
-        <button>logout</button>
+        <button type="submit">logout</button>
     </form>
     <form action="/deck">
-
+        <button type="submit">deck</button>
     </form>
     <form action="/carrello">
-
+        <button type="submit">carrello</button>
     </form>
 </header>
 
@@ -27,8 +28,8 @@
             <img src="{{ elemento.foto }}" alt="{{ elemento.nome }}" style="max-width: 100px; max-height: 100px;">
         </div>
         {% endif %}
-        <!--DA FARE!!!!!!-->
-        <button>aggiungi al carrello</button>
+        <!-- <button>aggiungi al carrello</button> -->
+        
     </li>
     {% endfor %}
 </ul>
