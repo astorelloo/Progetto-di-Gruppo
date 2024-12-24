@@ -23,6 +23,9 @@ class DeckCarta(db.Model):
     carta_id = db.Column(db.Integer, db.ForeignKey('carta.id'), nullable=False) 
     quantita = db.Column(db.Integer, nullable=False, default=1)
 
+    # Relazione con Carta
+    carta = db.relationship('Carta', backref='deck_carte')
+
 # Modello per il mazzo
 class Deck(db.Model):
     id = db.Column(db.Integer, primary_key=True)

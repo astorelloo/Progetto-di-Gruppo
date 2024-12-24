@@ -1,1 +1,33 @@
-sei nel deck
+<form action="/home">
+    <button>torna alla home</button>
+</form>
+<h1>Il tuo deck</h1>
+{% if deckCarte|length > 0 %}
+<ul>
+    {% for carta in deckCarte %}
+    <li>
+        <div>
+            <img src="{{ carta.immagine }}" alt="{{ carta.nome }}">
+            <span>{{ carta.nome }}</span>
+        </div>
+        <span>Quantità: {{ carta.quantita }}</span>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p><b>Non ci sono carte nel deck!</b></p>
+{% endif %}
+
+<h2>Aggiungi una carta al tuo deck</h2>
+
+{% if error %}
+<p class="text-danger"><b>{{ error }}</b></p>
+{% endif %}
+
+<form method="POST" action="/deck">
+    <div>
+        <label for="carta_id">ID della carta:</label>
+        <input type="number" id="carta_id" name="carta_id" required placeholder="id della carta da inserire">
+    </div>
+    <button type="submit" >Aggiungi al deck</button>
+</form>

@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from models import db, User, Carta
+from models import db, User, Deck, Carta, DeckCarta, CarrelloItem, Carrello
 import requests
 
 app = Flask(__name__)
@@ -58,10 +58,52 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-@app.route('/deck')
+@app.route('/deck', methods=['GET', 'POST'])
 @login_required
 def deck():
-    return render_template('deck.html', username=current_user.username, error=None)
+    #controllo se il deck esiste per l'utente
+    user_deck = Deck.query.filter_by(nome=f"Deck di {current_user.username}").first()
+    if not user_deck:
+        return render_template('deck.html', username=current_user.username, deckCarte=[], error="Deck non trovato.")
+    #da qua in poi onclick del bottone
+    if request.method == 'POST':
+        carta_id = request.form.get('carta_id')
+        print(f"ID carta ricevuto: {carta_id}")
+
+        carta = Carta.query.get(int(carta_id))
+        if not carta:
+            print(f"Carta non trovata per ID: {carta_id}")
+            return render_template('deck.html', username=current_user.username, deckCarte=[], error="Carta non trovata.")
+
+        deck_carta = DeckCarta.query.filter_by(deck_id=user_deck.id, carta_id=carta_id).first()
+        print(f"DeckCarta trovato: {deck_carta}")
+
+        if deck_carta:
+            if deck_carta.quantita < 3:
+                deck_carta.quantita += 1
+                db.session.commit()
+                print("Quantità aggiornata nel deck.")
+            else:
+                print("Errore: Massimo 3 copie.")
+                return render_template('deck.html', username=current_user.username, deckCarte=[], error="Puoi aggiungere massimo 3 copie di una carta.")
+        else:
+            nuova_carta = DeckCarta(deck_id=user_deck.id, carta_id=carta_id, quantita=1)
+            db.session.add(nuova_carta)
+            db.session.commit()
+            print("Nuova carta aggiunta al deck.")
+
+    #carica le carte del deck
+    deck_carte = DeckCarta.query.filter_by(deck_id=user_deck.id).all()
+    carte_dettaglio = [
+        {
+            "nome": carta.carta.nome,
+            "immagine": carta.carta.foto,
+            "quantita": carta.quantita
+        }
+        for carta in deck_carte
+        ]
+    return render_template('deck.html', username=current_user.username, deckCarte=carte_dettaglio, error=None)
+
 
 @app.route('/carrello')
 @login_required
