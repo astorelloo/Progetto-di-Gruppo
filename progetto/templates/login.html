@@ -1,12 +1,15 @@
+<link href="../static/css/style.css" rel="stylesheet">
+<div class="inizio">
 <h2>Login</h2>
-{% if error %}
-    <p style="color: red;">{{ error }}</p>
-{% endif %}
 <form method="POST">
     <label>Username:</label><br>
     <input type="text" name="username" required><br>
     <label>Password:</label><br>
     <input type="password" name="password" required><br>
     <button type="submit">Accedi</button>
+    {% if error %}
+    <p class="errore" style="color: red;">{{ error }}</p>
+    {% endif %}
 </form>
 <a href="{{ url_for('register') }}">Non hai un account? Registrati qui.</a>
+</div>

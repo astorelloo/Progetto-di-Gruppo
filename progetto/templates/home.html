@@ -1,16 +1,115 @@
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+        color: #333;
+        background-color: black;
+    }
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    header {
+        background-color: black;
+        padding: 10px;
+        gap: 10px;
+        display: flex;
+        justify-content: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Effetto ombra sotto l'header */
+    }
+
+    header button {
+        background-color: black;
+        color: #fff;
+        border: none;
+        margin-top: 10px;
+        padding: 15px 20px;
+        cursor: pointer;
+        font-size: 19px;
+        transition: background-color 0.3s, transform 0.2s;
+
+    }
+
+    /*-------------------------------------------------------------------------------------------------*/
+    
+    .list-group {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* Divide le carte in 3 per riga */
+        gap: 20px; /* Spazio tra le carte orizzontale/verticale */
+        padding: 20px;
+        background-color: #444;
+        list-style-type: none;
+        margin: 0;
+    }
+
+    .list-group-item {
+        background-color: rgb(136, 132, 132);
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        text-align: center;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .list-group-item:hover {
+        transform: scale(1.03); /* Ingrandisce quando si passa sopra con il cursore */
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .list-group-item h2 {
+        font-size: 18px;
+        margin: 10px 0;
+        color: #333;
+    }
+
+    .list-group-item p {
+        margin: 15px;
+        margin-left: 30px;
+        margin-right: 30px;
+        color: #555;
+
+        font-size: 15px;
+        
+    }
+
+    .list-group-item img {
+        border-radius: 5px;
+        margin-top: 10px;
+        width: 230px;
+    }
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    /* Responsive a una e due colonne */
+    @media (max-width: 768px) {
+        .list-group {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 500px) {
+        .list-group {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
 
 <header>
-    <form action="/logout">
-        <button type="submit">logout</button>
-    </form>
     <form action="/deck">
-        <button type="submit">deck</button>
+        <button type="submit">Deck</button>
     </form>
     <form action="/carrello">
-        <button type="submit">carrello</button>
+        <button type="submit">Carrello</button>
+    </form>
+    <form action="/logout">
+        <button type="submit">Logout</button>
     </form>
 </header>
-
 
 
 {% if carta|length > 0 %}
@@ -19,13 +118,14 @@
     {% for elemento in carta %}
     <li class="list-group-item d-flex justify-content-between align-items-center">
         <div>
-            <h2>{{ elemento.nome }}</h2>
-            <p>{{ elemento.descrizione }}</p>
-            <p>Prezzo: €{{ elemento.prezzo }}</p>
-        </div>
-        {% if elemento.foto %}
-        <div>
-            <img src="{{ elemento.foto }}" alt="{{ elemento.nome }}" style="max-width: 100px; max-height: 100px;">
+            </div>
+            {% if elemento.foto %}
+            <div>
+            <img src="{{ elemento.foto }}" alt="{{ elemento.nome }}"><br><br>
+            <h2>{{ elemento.nome }}</h2><br>
+            <p>{{ elemento.descrizione }}</p><br>
+            <h2>Prezzo: €{{ elemento.prezzo }}</h2>
+            
         </div>
         {% endif %}
         <!-- <button>aggiungi al carrello</button> -->
