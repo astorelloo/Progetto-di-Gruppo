@@ -103,10 +103,61 @@ def deck():
     deck_list = Deck.query.all()
     return render_template('deck.html', username=current_user.username, deck_list=deck_list, error=None)
 
-@app.route('/carrello')
+@app.route('/carrello', methods=['GET', 'POST'])
 @login_required
 def carrello():
-    return render_template('carrello.html', username=current_user.username, error=None)
+    # Recupera il carrello dell'utente corrente o lo crea se non esiste
+    carrello = Carrello.query.filter_by(user_id=current_user.id).first()
+    if not carrello:
+        carrello = Carrello(user_id=current_user.id)
+        db.session.add(carrello)
+        db.session.commit()
+    if request.method == 'POST':
+        action = request.form.get('action')
+        #aggiunta
+        if action == 'aggCarrello':
+            carta_id = request.form.get('carta_id')
+            quantita = int(request.form.get('quantita', 1))
+            if not carta_id or quantita < 1:
+                return render_template(
+                    'carrello.html', 
+                    username=current_user.username, 
+                    items=[], 
+                    totale=0.0, 
+                    error="Dati non validi."
+                )
+            carta = Carta.query.get(carta_id)
+            if not carta:
+                return render_template(
+                    'carrello.html', 
+                    username=current_user.username, 
+                    items=[], 
+                    totale=0.0, 
+                    error="Carta non trovata."
+                )
+            carrello_item = CarrelloItem.query.filter_by(carrello_id=carrello.id, carta_id=carta.id).first()
+            if carrello_item:
+                carrello_item.quantita += quantita
+            else:
+                carrello_item = CarrelloItem(carrello_id=carrello.id, carta_id=carta.id, quantita=quantita)
+                db.session.add(carrello_item)
+            db.session.commit()
+            return redirect(url_for('carrello'))
+    items = []
+    totale = 0.0
+    for item in carrello.items:
+        carta = item.carta
+        if carta:
+            totale_carta = carta.prezzo * item.quantita
+            totale += totale_carta
+            items.append({
+                'nome': carta.nome,
+                'foto': carta.foto,
+                'quantita': item.quantita,
+                'prezzo_unitario': carta.prezzo,
+                'totale_carta': totale_carta
+            })
+    return render_template('carrello.html', username=current_user.username, items=items, totale=totale, error=None)
 
 @app.route('/api/carte', methods=['GET'])
 def get_carte():
