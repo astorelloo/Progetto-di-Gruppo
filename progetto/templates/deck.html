@@ -1,33 +1,74 @@
-<form action="/home">
-    <button>torna alla home</button>
+<form action="/home" method="GET">
+    <button type="submit">Torna alla home</button>
 </form>
-<h1>Il tuo deck</h1>
-{% if deckCarte|length > 0 %}
+<h1>Gestione dei Deck</h1>
+
+<!-- Form per creare un nuovo deck -->
+<h2>Crea un nuovo deck</h2>
+<form method="POST" action="/deck">
+    <input type="hidden" name="action" value="create_deck">
+    <div>
+        <label for="nome_deck">Nome del deck:</label>
+        <input type="text" id="nome_deck" name="nome_deck" required placeholder="Inserisci il nome del deck">
+    </div>
+    <div>
+        <label for="descrizione_deck">Descrizione:</label>
+        <textarea id="descrizione_deck" name="descrizione_deck" placeholder="Inserisci una descrizione opzionale"></textarea>
+    </div>
+    <button type="submit">Crea deck</button>
+</form>
+
+<!-- Lista dei deck disponibili -->
+<h2>Elenco dei tuoi deck</h2>
+{% if deck_list|length > 0 %}
 <ul>
-    {% for carta in deckCarte %}
+    {% for deck in deck_list %}
     <li>
         <div>
-            <img src="{{ carta.immagine }}" alt="{{ carta.nome }}">
-            <span>{{ carta.nome }}</span>
+            <h3>{{ deck.nome }}</h3>
+            <p>{{ deck.descrizione }}</p>
         </div>
-        <span>Quantità: {{ carta.quantita }}</span>
+        <!-- Visualizza le carte del deck -->
+        <h4>Carte nel deck:</h4>
+        {% if deck.carte|length > 0 %}
+        <ul>
+            {% for deck_carta in deck.carte %}
+            <li>
+                <div>
+                    <img src="{{ deck_carta.carta.foto }}" alt="{{ deck_carta.carta.nome }}" style="max-height: 100px;">
+                    <span>{{ deck_carta.carta.nome }}</span>
+                </div>
+                <span>Quantità: {{ deck_carta.quantita }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p><i>Non ci sono carte in questo deck.</i></p>
+        {% endif %}
+
+        <!-- Modulo per aggiungere una nuova carta -->
+        <form method="POST" action="/deck">
+            <input type="hidden" name="action" value="add_card">
+            <input type="hidden" name="deck_id" value="{{ deck.id }}">
+            <div>
+                <label for="carta_id_{{ deck.id }}">ID della carta:</label>
+                <input 
+                    type="number" 
+                    id="carta_id_{{ deck.id }}" 
+                    name="carta_id" 
+                    required 
+                    placeholder="ID della carta da aggiungere">
+            </div>
+            <button type="submit">Aggiungi al deck</button>
+        </form>
     </li>
     {% endfor %}
 </ul>
 {% else %}
-<p><b>Non ci sono carte nel deck!</b></p>
+<p><b>Non hai ancora creato alcun deck!</b></p>
 {% endif %}
 
-<h2>Aggiungi una carta al tuo deck</h2>
-
+<!-- Messaggi di errore -->
 {% if error %}
 <p class="text-danger"><b>{{ error }}</b></p>
 {% endif %}
-
-<form method="POST" action="/deck">
-    <div>
-        <label for="carta_id">ID della carta:</label>
-        <input type="number" id="carta_id" name="carta_id" required placeholder="id della carta da inserire">
-    </div>
-    <button type="submit" >Aggiungi al deck</button>
-</form>

@@ -61,49 +61,47 @@ def logout():
 @app.route('/deck', methods=['GET', 'POST'])
 @login_required
 def deck():
-    #controllo se il deck esiste per l'utente
-    user_deck = Deck.query.filter_by(nome=f"Deck di {current_user.username}").first()
-    if not user_deck:
-        return render_template('deck.html', username=current_user.username, deckCarte=[], error="Deck non trovato.")
-    #da qua in poi onclick del bottone
     if request.method == 'POST':
-        carta_id = request.form.get('carta_id')
-        print(f"ID carta ricevuto: {carta_id}")
-
-        carta = Carta.query.get(int(carta_id))
-        if not carta:
-            print(f"Carta non trovata per ID: {carta_id}")
-            return render_template('deck.html', username=current_user.username, deckCarte=[], error="Carta non trovata.")
-
-        deck_carta = DeckCarta.query.filter_by(deck_id=user_deck.id, carta_id=carta_id).first()
-        print(f"DeckCarta trovato: {deck_carta}")
-
-        if deck_carta:
-            if deck_carta.quantita < 3:
-                deck_carta.quantita += 1
-                db.session.commit()
-                print("Quantità aggiornata nel deck.")
-            else:
-                print("Errore: Massimo 3 copie.")
-                return render_template('deck.html', username=current_user.username, deckCarte=[], error="Puoi aggiungere massimo 3 copie di una carta.")
-        else:
-            nuova_carta = DeckCarta(deck_id=user_deck.id, carta_id=carta_id, quantita=1)
-            db.session.add(nuova_carta)
+        action = request.form.get('action')
+        if action == 'create_deck':
+            print("creazione deck")
+            nome_deck = request.form.get('nome_deck')
+            descrizione_deck = request.form.get('descrizione_deck', '')
+            if Deck.query.filter_by(nome=nome_deck).first():
+                return render_template('deck.html', username=current_user.username, deckCarte=[], error="Esiste già un deck con questo nome.")
+            
+            nuovo_deck = Deck(nome=nome_deck, descrizione=descrizione_deck)
+            db.session.add(nuovo_deck)
             db.session.commit()
-            print("Nuova carta aggiunta al deck.")
+            return redirect(url_for('deck'))
+        
+        elif action == 'add_card':
+            print("aggiunta carta")
+            carta_id = request.form.get('carta_id')
+            deck_id = request.form.get('deck_id')
+            deck = Deck.query.get(deck_id)
+            if not deck:
+                return render_template('deck.html', username=current_user.username, deckCarte=[], error="Deck non trovato.")
 
-    #carica le carte del deck
-    deck_carte = DeckCarta.query.filter_by(deck_id=user_deck.id).all()
-    carte_dettaglio = [
-        {
-            "nome": carta.carta.nome,
-            "immagine": carta.carta.foto,
-            "quantita": carta.quantita
-        }
-        for carta in deck_carte
-        ]
-    return render_template('deck.html', username=current_user.username, deckCarte=carte_dettaglio, error=None)
+            carta = Carta.query.get(carta_id)
+            if not carta:
+                return render_template('deck.html', username=current_user.username, deckCarte=[], error="Carta non trovata.")
 
+            deck_carta = DeckCarta.query.filter_by(deck_id=deck.id, carta_id=carta.id).first()
+            if deck_carta:
+                if deck_carta.quantita < 3:
+                    deck_carta.quantita += 1
+                    db.session.commit()
+                else:
+                    return render_template('deck.html', username=current_user.username, deckCarte=[], error="Puoi aggiungere massimo 3 copie di una carta.")
+            else:
+                nuova_carta = DeckCarta(deck_id=deck.id, carta_id=carta.id, quantita=1)
+                db.session.add(nuova_carta)
+                db.session.commit()
+            return redirect(url_for('deck'))
+
+    deck_list = Deck.query.all()
+    return render_template('deck.html', username=current_user.username, deck_list=deck_list, error=None)
 
 @app.route('/carrello')
 @login_required
