@@ -1,32 +1,258 @@
-<form action="/home" method="GET">
-    <button type="submit">Torna alla home</button>
-</form>
-<h1>Gestione dei Deck</h1>
+
+<style>
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+        background-color: #444;
+    }
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    header {
+        background-color: black;
+        padding: 10px;
+        gap: 10px;
+        display: flex;
+        justify-content: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Effetto ombra sotto l'header */
+    }
+
+    header button {
+        background-color: black;
+        color: #fff;
+        border: none;
+        margin-top: 10px;
+        padding: 15px 20px;
+        cursor: pointer;
+        font-size: 19px;
+        border-radius: 15px;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+
+    header button:hover {
+        transform: scale(1.1); /* Ingrandisce quando si passa sopra con il cursore */
+        background-color: #333;
+    }
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    h1, h2, h3, h4 {
+        text-align: center;
+        color: #222;
+        margin-top: 20px;
+        font-size: 2em;
+    }
+
+    .titolo {
+        font-size: 50px;
+        color: white;
+    }
+
+    .sottotitolo{
+        font-size: 40px;
+        color: white;
+    }
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    .creaDeck {
+        background-color: rgb(136, 132, 132);
+        text-align: center;
+        padding: 25px;
+        margin-left: 400px;
+        margin-right: 400px;
+        border-radius: 20px;
+        border: 1px solid #ccc;
+    }
+
+    .creaDeck button {
+        margin-top: 20px;
+        background-color: black;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        font-size: 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bolder;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .creaDeck label{
+        font-size: 25px;
+        margin-bottom: 5px;
+        font-weight: bolder;
+        padding: 7px;
+    }
+
+    .creaDeck button:hover {
+        transform: scale(1.1); /* Ingrandisce quando si passa sopra con il cursore */
+        background-color: #333;    
+    }
+
+    label {
+        display: block;
+        font-size: 1rem;
+        margin-bottom: 5px;
+        color: #333;
+        font-weight: bolder;
+    }
+
+    textarea {
+        height: 100px;
+        resize: none;
+    }
+    
+    input[type="text"], textarea, input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #bbb7b7;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        transition: border-color 0.3s;
+    }
+
+    input[type="text"]:focus, textarea:focus, input[type="number"]:focus {
+        border-color: #888;
+        outline: none;
+    }
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    .aggiungialDeck {
+        text-align: center;
+    }
+    
+    .aggiungialDeck button{
+        margin-top: 20px;
+        background-color: black;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        font-size: 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bolder;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0 auto;
+        max-width: 800px;
+    }
+
+    li {
+        background-color: rgb(136, 132, 132);
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        color: #fff;
+    }
+
+    li div {
+        margin-bottom: 10px;
+    }
+
+    li img {
+        display: block;
+        max-width: 100%;
+        max-height: 400px;
+        margin: 10px auto;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    li span {
+        display: block;
+        margin: 5px 0;
+        font-size: 14px;
+        color: #aaa;
+
+    }
+
+    .descrizione_deck{
+        text-align: center;
+        font-size: 20px;
+        color: #444;
+        font-weight: bolder;
+    }
+
+    .nome_carta{
+        text-align: center;
+        font-size: 20px;
+        margin-top: 15px;
+        color: #444;
+        font-weight: bolder;
+    }
+    
+    .quantita{
+        font-size: 15px;
+        color: #444;
+        font-weight: bolder;
+    }
+
+    /*-------------------------------------------------------------------------------------------------*/
+    
+    .text-danger {
+        color: red;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 20px;
+    }
+    
+</style>
+
+<header>
+    <form action="/home">
+        <button type="submit">Home</button>
+    </form>
+    <form action="/carrello">
+        <button type="submit">Carrello</button>
+    </form>
+    <form action="/logout">
+        <button type="submit">Logout</button>
+    </form>
+</header>
+
+<h1 class="titolo">Gestione dei Deck</h1>
 
 <!-- Form per creare un nuovo deck -->
-<h2>Crea un nuovo deck</h2>
-<form method="POST" action="/deck">
-    <input type="hidden" name="action" value="create_deck">
-    <div>
-        <label for="nome_deck">Nome del deck:</label>
-        <input type="text" id="nome_deck" name="nome_deck" required placeholder="Inserisci il nome del deck">
-    </div>
-    <div>
-        <label for="descrizione_deck">Descrizione:</label>
-        <textarea id="descrizione_deck" name="descrizione_deck" placeholder="Inserisci una descrizione opzionale"></textarea>
-    </div>
-    <button type="submit">Crea deck</button>
-</form>
-
+<div class="creaDeck">
+    <h2>Crea un nuovo deck</h2>
+    <form method="POST" action="/deck">
+        <input type="hidden" name="action" value="create_deck">
+        <div>
+            <label for="nome_deck">Nome del deck:</label>
+            <input type="text" id="nome_deck" name="nome_deck" required placeholder="Inserisci il nome del deck">
+        </div>
+        <div>
+            <label for="descrizione_deck">Descrizione:</label>
+            <textarea id="descrizione_deck" name="descrizione_deck" placeholder="Inserisci una descrizione opzionale" maxlength="500"></textarea>
+        </div>
+        <button type="submit">Crea deck</button>
+    </form>
+</div>
 <!-- Lista dei deck disponibili -->
-<h2>Elenco dei tuoi deck</h2>
+<h2 class="sottotitolo">Elenco dei tuoi deck</h2>
 {% if deck_list|length > 0 %}
 <ul>
     {% for deck in deck_list %}
     <li>
         <div>
             <h3>{{ deck.nome }}</h3>
-            <p>{{ deck.descrizione }}</p>
+            <p class="descrizione_deck">{{ deck.descrizione }}</p>
         </div>
         <!-- Visualizza le carte del deck -->
         <h4>Carte nel deck:</h4>
@@ -35,31 +261,25 @@
             {% for deck_carta in deck.carte %}
             <li>
                 <div>
-                    <img src="{{ deck_carta.carta.foto }}" alt="{{ deck_carta.carta.nome }}" style="max-height: 100px;">
-                    <span>{{ deck_carta.carta.nome }}</span>
+                    <img src="{{ deck_carta.carta.foto }}" alt="{{ deck_carta.carta.nome }}">
+                    <span class="nome_carta">{{ deck_carta.carta.nome }}</span>
                 </div>
-                <span>Quantità: {{ deck_carta.quantita }}</span>
+                <span class="quantita">Quantità: {{ deck_carta.quantita }}</span>
             </li>
             {% endfor %}
         </ul>
         {% else %}
         <p><i>Non ci sono carte in questo deck.</i></p>
         {% endif %}
-
         <!-- Modulo per aggiungere una nuova carta -->
         <form method="POST" action="/deck">
             <input type="hidden" name="action" value="add_card">
             <input type="hidden" name="deck_id" value="{{ deck.id }}">
             <div>
                 <label for="carta_id_{{ deck.id }}">ID della carta:</label>
-                <input 
-                    type="number" 
-                    id="carta_id_{{ deck.id }}" 
-                    name="carta_id" 
-                    required 
-                    placeholder="ID della carta da aggiungere">
+                <input type="number" id="carta_id_{{ deck.id }}" name="carta_id" required placeholder="ID della carta da aggiungere" min="1">
             </div>
-            <button type="submit">Aggiungi al deck</button>
+            <div class="aggiungialDeck"><button type="submit">Aggiungi al deck</button></div>
         </form>
     </li>
     {% endfor %}

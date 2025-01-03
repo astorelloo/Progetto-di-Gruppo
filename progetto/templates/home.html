@@ -27,11 +27,38 @@
         padding: 15px 20px;
         cursor: pointer;
         font-size: 19px;
+        border-radius: 15px;
         transition: background-color 0.3s, transform 0.2s;
-
     }
 
+    header button:hover {
+        transform: scale(1.1); /* Ingrandisce quando si passa sopra con il cursore */
+        background-color: #333;
+    }
+
+    
     /*-------------------------------------------------------------------------------------------------*/
+
+    .titolo {
+        text-align: center;
+        color: white;
+        background-color: #444;
+        margin: 0;
+        padding: 20px;
+        font-size: 35px;
+    }
+    .sottotitolo {
+        text-align: center;
+        color: white;
+        background-color: #444;
+        margin: 0;
+        padding: 10px;
+        font-size: 16px;
+    }
+
+
+    /*-------------------------------------------------------------------------------------------------*/
+
     
     .list-group {
         display: grid;
@@ -57,7 +84,6 @@
 
     .list-group-item:hover {
         transform: scale(1.03); /* Ingrandisce quando si passa sopra con il cursore */
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
     }
 
     .list-group-item h2 {
@@ -111,7 +137,8 @@
     </form>
 </header>
 
-
+<h2 class="titolo">Tutte le carte disponibili!</h2>
+<p class="sottotitolo">Segna l'ID delle carte che preferisci e aggiungile ai tuoi deck oppure al carrello per acquistarle!</p>
 {% if carta|length > 0 %}
 <ul class="list-group">
     <!-- Iterazione su ogni elemento della lista -->
@@ -119,17 +146,15 @@
     <li class="list-group-item d-flex justify-content-between align-items-center">
         <div>
             </div>
-            {% if elemento.foto %}
+                {% if elemento.foto %}
             <div>
             <img src="{{ elemento.foto }}" alt="{{ elemento.nome }}"><br><br>
             <h2>{{ elemento.nome }}</h2><br>
             <p>{{ elemento.descrizione }}</p><br>
-            <h2>Prezzo: €{{ elemento.prezzo }}</h2>
-            
+            <h2>Prezzo: €{{ elemento.prezzo }} Id: {{elemento.id}}</h2>
         </div>
         {% endif %}
         <!-- <button>aggiungi al carrello</button> -->
-        
     </li>
     {% endfor %}
 </ul>

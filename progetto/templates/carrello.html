@@ -1,8 +1,156 @@
+<style>
 
-<form action="/home">
-    <button>torna alla home</button>
-</form>
-<h1>Carrello di {{ username }}</h1>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+        background-color: #444;
+    }
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    header {
+        background-color: black;
+        padding: 10px;
+        gap: 10px;
+        display: flex;
+        justify-content: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Effetto ombra sotto l'header */
+    }
+
+    header button {
+        background-color: black;
+        color: #fff;
+        border: none;
+        margin-top: 10px;
+        padding: 15px 20px;
+        cursor: pointer;
+        font-size: 19px;
+        border-radius: 15px;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+
+    header button:hover {
+        transform: scale(1.1); /* Ingrandisce quando si passa sopra con il cursore */
+        background-color: #333;
+    }
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    .titolo{
+        color: white;
+        font-size: 40px;
+    }
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    h1 {
+        text-align: center;
+        font-size: 2em;
+        color: #333;
+        margin-top: 20px;
+    }
+
+    table {
+        width: 80%;
+        margin: 0 auto;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    table th, table td {
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: center;
+        color: white;
+        font-size: 16px;
+        font-weight: bolder;
+    }
+
+    table th {
+        background-color: #444;
+        color: white;
+    }
+
+    table td img {
+        border-radius: 5px;
+        height: 170px;
+    }
+
+    /*-------------------------------------------------------------------------------------------------*/
+
+    .carrello form {
+        width: 500px;
+        margin: 20px auto;
+        background-color: #444;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        color: white;
+        text-align: center;
+    }
+
+    .carrello form label {
+        display: block;
+        margin-bottom: 5px;
+        color: #fff;
+        font-weight: bolder;
+    }
+
+    .carrello form input[type="number"] {
+        width: 450px;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        background-color: #bbb7b7;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .carrello form input[type="number"]:focus {
+        border-color: #888;
+        outline: none;
+    }
+
+    .carrello form button {
+        padding: 15px 15px;
+        background-color: black;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1.1em;
+        font-weight: bolder;
+
+    }
+    
+    /*-------------------------------------------------------------------------------------------------*/
+
+    p {
+        color: red;
+        text-align: center;
+        margin-top: 20px;
+        font-weight: bold;
+    }
+    
+</style>
+
+<header>
+    <form action="/home">
+        <button type="submit">Home</button>
+    </form>
+    <form action="/deck">
+        <button type="submit">Deck</button>
+    </form>
+    <form action="/logout">
+        <button type="submit">Logout</button>
+    </form>
+</header>
+
+<h1 class="titolo">Carrello di {{ username }}</h1>
 <table>
     <tr>
         <th>Immagine</th>
@@ -13,7 +161,7 @@
     </tr>
     {% for item in items %}
     <tr>
-        <td><img src="{{ item.foto }}" alt="{{ item.nome }}" style="width:50px;height:50px;"></td>
+        <td><img src="{{ item.foto }}" alt="{{ item.nome }}"></td>
         <td>{{ item.nome }}</td>
         <td>{{ item.quantita }}</td>
         <td>{{ item.prezzo_unitario }} €</td>
@@ -21,18 +169,20 @@
     </tr>
     {% endfor %}
 </table>
-<form method="POST" action="/carrello">
-    <input type="hidden" name="action" value="aggCarrello">
-    <div>
-        <label for="carta_id">ID della carta:</label>
-        <input type="number" id="carta_id" name="carta_id" required placeholder="Inserisci l'ID della carta">
-    </div>
-    <div>
-        <label for="quantita">Quantità:</label>
-        <input type="number" id="quantita" name="quantita" required placeholder="Inserisci la quantità" min="1">
-    </div>
-    <button type="submit">Aggiungi al carrello</button>
-</form>
+<div class="carrello">
+    <form method="POST" action="/carrello">
+        <input type="hidden" name="action" value="aggCarrello">
+        <div>
+            <label for="carta_id">ID della carta:</label>
+            <input type="number" id="carta_id" name="carta_id" required placeholder="Inserisci l'ID della carta" min="1">
+        </div>
+        <div>
+            <label for="quantita">Quantità:</label>
+            <input type="number" id="quantita" name="quantita" required placeholder="Inserisci la quantità" min="1">
+        </div>
+        <button type="submit">Aggiungi al carrello</button>
+    </form>
+</div>
 {% if error %}
 <p style="color:red;">{{ error }}</p>
 {% endif %}
