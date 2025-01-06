@@ -139,7 +139,22 @@
         border-radius: 5px;
         cursor: pointer;
         font-weight: bolder;
-        transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .eliminaDeck {
+        text-align: center;
+    }
+
+    .eliminaDeck button{
+        margin-top: 5px;
+        background-color: rgb(172, 7, 7);
+        color: black;
+        border: 2px solid black;
+        padding: 10px 15px;
+        font-size: 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bolder;
     }
 
     /*-------------------------------------------------------------------------------------------------*/
@@ -255,11 +270,13 @@
             <p class="descrizione_deck">{{ deck.descrizione }}</p>
         </div>
         <!-- Bottone per eliminare il deck -->
-        <form method="POST" action="/deck">
-            <input type="hidden" name="action" value="delete_deck">
-            <input type="hidden" name="deck_id" value="{{ deck.id }}">
-            <button type="submit" class="btn btn-danger">Elimina deck</button>
-        </form>
+        <div class="eliminaDeck">
+            <form method="POST" action="/deck">
+                <input type="hidden" name="action" value="delete_deck">
+                <input type="hidden" name="deck_id" value="{{ deck.id }}">
+                <button type="submit" class="btn btn-danger">Elimina deck</button>
+            </form>
+        </div>
         <!-- Visualizza le carte del deck -->
         <h4>Carte nel deck:</h4>
         {% if deck.carte|length > 0 %}

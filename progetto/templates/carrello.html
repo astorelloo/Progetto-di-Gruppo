@@ -124,9 +124,18 @@
         cursor: pointer;
         font-size: 1.1em;
         font-weight: bolder;
-
     }
     
+    .togliCarta form button{
+        padding: 10px 10px;
+        background-color: black;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
     /*-------------------------------------------------------------------------------------------------*/
 
     p {
@@ -169,11 +178,13 @@
         <td>{{ item.totale_carta }} €</td>
         <td>
             <!-- Bottone per rimuovere la carta -->
-            <form method="POST" action="/carrello" style="display:inline;">
-                <input type="hidden" name="action" value="remove_card">
-                <input type="hidden" name="carta_id" value="{{ item.id }}">
-                <button type="submit" class="btn btn-danger">Togli la carta</button>
-            </form>
+             <div class="togliCarta">
+                <form method="POST" action="/carrello" style="display:inline;">
+                    <input type="hidden" name="action" value="remove_card">
+                    <input type="hidden" name="carta_id" value="{{ item.id }}">
+                    <button type="submit" class="btn btn-danger">Rimuovi la carta</button>
+                </form>
+            </div>
         </td>
     </tr>
     {% endfor %}
