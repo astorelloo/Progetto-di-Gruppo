@@ -194,7 +194,6 @@
         margin: 5px 0;
         font-size: 14px;
         color: #aaa;
-
     }
 
     .descrizione_deck{
@@ -225,6 +224,12 @@
         font-weight: bold;
         text-align: center;
         margin-top: 20px;
+    }
+
+    .noDeck{
+        text-align: center;
+        color: white;
+        font-size: 20px;
     }
     
 </style>
@@ -300,7 +305,7 @@
             <input type="hidden" name="deck_id" value="{{ deck.id }}">
             <div>
                 <label for="carta_id_{{ deck.id }}">ID della carta:</label>
-                <input type="number" id="carta_id_{{ deck.id }}" name="carta_id" required placeholder="ID della carta da aggiungere" min="1">
+                <input type="number" id="carta_id_{{ deck.id }}" name="carta_id" required placeholder="ID della carta da aggiungere" min="1" max="1000">
             </div>
             <div class="aggiungialDeck"><button type="submit">Aggiungi al deck</button></div>
         </form>
@@ -308,7 +313,9 @@
     {% endfor %}
 </ul>
 {% else %}
+<div class="noDeck">
 <p><b>Non hai ancora creato alcun deck!</b></p>
+</div>
 {% endif %}
 
 <!-- Messaggi di errore -->
