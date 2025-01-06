@@ -57,14 +57,14 @@ def home():
 def logout():
     logout_user()
     return redirect(url_for('login'))
-
 @app.route('/deck', methods=['GET', 'POST'])
 @login_required
 def deck():
     if request.method == 'POST':
         action = request.form.get('action')
         if action == 'create_deck':
-            print("creazione deck")
+            # Creazione del deck
+            print("Creazione deck")
             nome_deck = request.form.get('nome_deck')
             descrizione_deck = request.form.get('descrizione_deck', '')
             if Deck.query.filter_by(nome=nome_deck).first():
@@ -76,7 +76,8 @@ def deck():
             return redirect(url_for('deck'))
         
         elif action == 'add_card':
-            print("aggiunta carta")
+            # Aggiunta di una carta al deck
+            print("Aggiunta carta")
             carta_id = request.form.get('carta_id')
             deck_id = request.form.get('deck_id')
             deck = Deck.query.get(deck_id)
@@ -100,21 +101,34 @@ def deck():
                 db.session.commit()
             return redirect(url_for('deck'))
 
+        elif action == 'delete_deck':
+            # Eliminazione del deck
+            print("Eliminazione deck")
+            deck_id = request.form.get('deck_id')
+            deck = Deck.query.get(deck_id)
+            if not deck:
+                return render_template('deck.html', username=current_user.username, deckCarte=[], error="Deck non trovato.")
+            DeckCarta.query.filter_by(deck_id=deck.id).delete()
+            db.session.delete(deck)
+            db.session.commit()
+            return redirect(url_for('deck'))
     deck_list = Deck.query.all()
     return render_template('deck.html', username=current_user.username, deck_list=deck_list, error=None)
 
 @app.route('/carrello', methods=['GET', 'POST'])
 @login_required
 def carrello():
-    # Recupera il carrello dell'utente corrente o lo crea se non esiste
+    # Recupera il carrello dell'utente se nn c'è lo crea
     carrello = Carrello.query.filter_by(user_id=current_user.id).first()
     if not carrello:
         carrello = Carrello(user_id=current_user.id)
         db.session.add(carrello)
         db.session.commit()
+
     if request.method == 'POST':
         action = request.form.get('action')
-        #aggiunta
+
+        # Aggiunta di una carta al carrello
         if action == 'aggCarrello':
             carta_id = request.form.get('carta_id')
             quantita = int(request.form.get('quantita', 1))
@@ -143,6 +157,18 @@ def carrello():
                 db.session.add(carrello_item)
             db.session.commit()
             return redirect(url_for('carrello'))
+
+        # Rimozione di una carta dal carrello
+        elif action == 'remove_card':
+            carta_id = request.form.get('carta_id')
+            carrello_item = CarrelloItem.query.filter_by(carrello_id=carrello.id, carta_id=carta_id).first()
+            if carrello_item:
+                if carrello_item.quantita > 1:
+                    carrello_item.quantita -= 1
+                else:
+                    db.session.delete(carrello_item)
+                db.session.commit()
+            return redirect(url_for('carrello'))
     items = []
     totale = 0.0
     for item in carrello.items:
@@ -151,6 +177,7 @@ def carrello():
             totale_carta = carta.prezzo * item.quantita
             totale += totale_carta
             items.append({
+                'id': carta.id,
                 'nome': carta.nome,
                 'foto': carta.foto,
                 'quantita': item.quantita,

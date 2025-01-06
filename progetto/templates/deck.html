@@ -254,6 +254,12 @@
             <h3>{{ deck.nome }}</h3>
             <p class="descrizione_deck">{{ deck.descrizione }}</p>
         </div>
+        <!-- Bottone per eliminare il deck -->
+        <form method="POST" action="/deck">
+            <input type="hidden" name="action" value="delete_deck">
+            <input type="hidden" name="deck_id" value="{{ deck.id }}">
+            <button type="submit" class="btn btn-danger">Elimina deck</button>
+        </form>
         <!-- Visualizza le carte del deck -->
         <h4>Carte nel deck:</h4>
         {% if deck.carte|length > 0 %}
